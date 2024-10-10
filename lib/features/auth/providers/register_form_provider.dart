@@ -138,16 +138,19 @@ class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
     state = state.copyWith(
       confirmacionContrasena: newConfirmPassword,
       esValido: Formz.validate([
-            state.nombre,
-            state.apellido,
-            state.email,
-            state.contrasena,
-            newConfirmPassword
-          ]) &&
-          state.contrasena.value ==
-              newConfirmPassword
-                  .value, // Es válido solo si ambas contraseñas coinciden
+        state.nombre,
+        state.apellido,
+        state.email,
+        state.contrasena,
+        newConfirmPassword
+      ]), // Es válido solo si ambas contraseñas coinciden
     );
+
+    if (state.contrasena.value != state.confirmacionContrasena.value) {
+      state = state.copyWith(
+        esValido: false,
+      );
+    }
   }
 
   String? get confirmPasswordErrorMessage {
@@ -159,6 +162,14 @@ class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
 
   Future<void> onFormSubmit() async {
     _touchEveryField();
+
+    if (state.contrasena.value != state.confirmacionContrasena.value) {
+      // Mostrar mensaje de error si las contraseñas no coinciden
+      state = state.copyWith(
+        esValido: false,
+      );
+      return;
+    }
 
     if (!state.esValido) return;
 

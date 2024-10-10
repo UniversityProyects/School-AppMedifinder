@@ -16,10 +16,11 @@ class AuthDatasourceImpl extends AuthDatasource {
       final user = UserMapper.userJsonToEntity(response.data);
       return user;*/
       return User(
-          nombreCompleto: 'Jose Daniel',
-          direccion: '',
-          telefono: '',
-          especialidades: []);
+        nombreCompleto: 'Jose Daniel',
+        email: '',
+        id: 1,
+        estatus: "1",
+      );
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
         throw CustomError('Token incorrecto');
@@ -36,13 +37,13 @@ class AuthDatasourceImpl extends AuthDatasource {
   @override
   Future<User> login(String email, String password) async {
     try {
-      final response = await dio.post('/Medicos/Login',
+      final response = await dio.post('/Administradores/Login',
           data: {'email': email, 'contrasena': password});
 
       final user = UserMapper.userJsonToEntity(response.data);
       return user;
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404) {
+      if (e.response?.statusCode == 401) {
         throw CustomError(e.response?.data ?? 'Credenciales incorrectas');
       }
       if (e.type == DioExceptionType.connectionTimeout) {
