@@ -178,7 +178,7 @@ class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
     await RegisterUserCallback(state.email.value, state.contrasena.value,
         state.nombre.value, state.apellido.value);
 
-    state = state.copyWith(estaPosteado: true);
+    state = state.copyWith(estaPosteado: false);
   }
 
   void _touchEveryField() {

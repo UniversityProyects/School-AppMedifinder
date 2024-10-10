@@ -31,8 +31,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       final user = await authRepository.login(email, password);
       _setLoggedUser(user);
-    } on CustomError catch (e) {
-      logout(e.message);
+    } on ErrorPersonalizado catch (e) {
+      logout(e.mensaje);
     } catch (e) {
       logout('Error no controlado');
     }
@@ -43,8 +43,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       await authRepository.register(email, contrasena, nombre, apellido);
       _setRegisterUser();
-    } on CustomError catch (e) {
-      logout(e.message);
+    } on ErrorPersonalizado catch (e) {
+      logout(e.mensaje);
     } catch (e) {
       logout('Error no controlado');
     }

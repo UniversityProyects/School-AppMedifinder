@@ -2,9 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:medifinder_crm/config/config.dart';
 import 'package:medifinder_crm/features/auth/domain/domain.dart';
 import 'package:medifinder_crm/features/auth/infrastructure/infrastructure.dart';
+import 'dart:io';
 
 class AuthDatasourceImpl extends AuthDatasource {
-  final dio = Dio(BaseOptions(baseUrl: Environment.apiUrl));
+  final dio = Dio(BaseOptions(
+    baseUrl: Environment.apiUrl,
+    connectTimeout: const Duration(seconds: 10),
+    receiveTimeout: const Duration(seconds: 10),
+  ));
 
   @override
   Future<User> checkAuthStatus(String token) async {
@@ -23,10 +28,13 @@ class AuthDatasourceImpl extends AuthDatasource {
       );
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
-        throw CustomError('Token incorrecto');
+        throw ErrorPersonalizado('Token incorrecto');
       }
       if (e.type == DioExceptionType.connectionTimeout) {
-        throw CustomError('Revisar conexión a internet');
+        throw ErrorPersonalizado('Revisar conexión a internet');
+      }
+      if (e.type == DioExceptionType.receiveTimeout) {
+        throw ErrorPersonalizado('El servidor tardó demasiado en responder');
       }
       throw Exception();
     } catch (e) {
@@ -44,10 +52,18 @@ class AuthDatasourceImpl extends AuthDatasource {
       return user;
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
-        throw CustomError(e.response?.data ?? 'Credenciales incorrectas');
+        throw ErrorPersonalizado(
+            e.response?.data ?? 'Credenciales incorrectas');
+      }
+      if (e.error is SocketException) {
+        throw ErrorPersonalizado(
+            'Error de red: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
       }
       if (e.type == DioExceptionType.connectionTimeout) {
-        throw CustomError('Revisar conexión a internet');
+        throw ErrorPersonalizado('Revisar conexión a internet');
+      }
+      if (e.type == DioExceptionType.receiveTimeout) {
+        throw ErrorPersonalizado('El servidor tardó demasiado en responder');
       }
       throw Exception();
     } catch (e) {
@@ -71,14 +87,21 @@ class AuthDatasourceImpl extends AuthDatasource {
       if (data.containsKey('message')) {
         return data['message']; // Aquí retornas el mensaje
       } else {
-        throw CustomError('Respuesta inesperada de la API');
+        throw ErrorPersonalizado('Respuesta inesperada de la API');
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        throw CustomError(e.response?.data ?? 'Error de petición');
+        throw ErrorPersonalizado(e.response?.data ?? 'Error de petición');
+      }
+      if (e.error is SocketException) {
+        throw ErrorPersonalizado(
+            'Error de red: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
       }
       if (e.type == DioExceptionType.connectionTimeout) {
-        throw CustomError('Revisar conexión a internet');
+        throw ErrorPersonalizado('Revisar conexión a internet');
+      }
+      if (e.type == DioExceptionType.receiveTimeout) {
+        throw ErrorPersonalizado('El servidor tardó demasiado en responder');
       }
       throw Exception();
     } catch (e) {
