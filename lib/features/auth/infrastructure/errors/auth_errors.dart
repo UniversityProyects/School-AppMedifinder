@@ -4,9 +4,8 @@ class ConnectionTimeOut implements Exception {}
 
 class InvalidToken implements Exception {}
 
-class CustomError implements Exception {
-  final String message;
+class ErrorPersonalizado implements Exception {
+  final String mensaje;
   // final int errorCode;
-
-  CustomError(this.message);
+  ErrorPersonalizado(this.mensaje);
 }
