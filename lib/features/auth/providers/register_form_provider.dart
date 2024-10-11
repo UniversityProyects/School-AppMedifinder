@@ -205,7 +205,7 @@ class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
 final RegisterFormProvider =
     StateNotifierProvider.autoDispose<RegisterFormNotifier, RegisterFormState>(
         (ref) {
-  final RegisterUserCallback = ref.watch(authProvider.notifier).registerUser;
+  final RegisterUserCallback = ref.watch(authProvider.notifier).registroUsuario;
 
   return RegisterFormNotifier(RegisterUserCallback: RegisterUserCallback);
 });

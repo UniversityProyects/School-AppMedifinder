@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:medifinder_crm/config/router/app_router_notifier.dart';
 import 'package:medifinder_crm/features/auth/auth.dart';
 import 'package:medifinder_crm/features/auth/providers/auth_provider.dart';
-import 'package:medifinder_crm/features/principal/principal.dart';
+import 'package:medifinder_crm/features/home/principal.dart';
 
 final goRouterProvider = Provider((ref) {
   final goRouteNotifier = ref.read(GoRouterNotifierProvider);
@@ -37,17 +37,17 @@ final goRouterProvider = Provider((ref) {
         final rutaDestino = state.fullPath;
         final authStatus = goRouteNotifier.authStatus;
 
-        if (rutaDestino == '/splash' && authStatus == AuthStatus.checking)
+        if (rutaDestino == '/splash' && authStatus == EstatusSesion.revisando)
           return null;
 
-        if (authStatus == AuthStatus.notAuthenticated) {
+        if (authStatus == EstatusSesion.noAutenticado) {
           if (rutaDestino == '/login' || rutaDestino == '/register')
             return null;
 
           return '/login';
         }
 
-        if (authStatus == AuthStatus.authenticated) {
+        if (authStatus == EstatusSesion.autenticado) {
           if (rutaDestino == '/login' ||
               rutaDestino == '/register' ||
               rutaDestino == '/splash') return '/';

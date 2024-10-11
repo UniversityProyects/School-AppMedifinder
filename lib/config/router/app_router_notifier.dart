@@ -10,17 +10,17 @@ final GoRouterNotifierProvider = Provider((ref) {
 class GoRouterNotifier extends ChangeNotifier {
   final AuthNotifier _authNotifier;
 
-  AuthStatus _authStatus = AuthStatus.checking;
+  EstatusSesion _authStatus = EstatusSesion.revisando;
 
   GoRouterNotifier(this._authNotifier) {
     _authNotifier.addListener((state) {
-      authStatus = state.authStatus;
+      authStatus = state.estatusSesion;
     });
   }
 
-  AuthStatus get authStatus => _authStatus;
+  EstatusSesion get authStatus => _authStatus;
 
-  set authStatus(AuthStatus value) {
+  set authStatus(EstatusSesion value) {
     _authStatus = value;
     notifyListeners();
   }

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medifinder_crm/features/auth/providers/providers.dart';
-import 'package:medifinder_crm/features/auth/providers/auth_provider.dart';
-import 'package:medifinder_crm/features/auth/providers/register_form_provider.dart';
 import 'package:medifinder_crm/features/shared/shared.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -79,10 +77,10 @@ class _RegisterForm extends ConsumerWidget {
     final textStyles = Theme.of(context).textTheme;
 
     ref.listen(authProvider, (previous, next) {
-      if (next.errorMessage.isEmpty) return;
-      showSnackBar(context, next.errorMessage);
+      if (next.mensajeError.isEmpty) return;
+      showSnackBar(context, next.mensajeError);
 
-      if (next.registerStatus) {
+      if (next.estatusRegistro) {
         context.go('/login'); // Redirige al login
       }
     });

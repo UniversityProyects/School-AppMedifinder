@@ -1,8 +1,8 @@
-import '../entities/user.dart';
+import '../entities/usuario.dart';
 
 abstract class AuthDatasource {
-  Future<User> login(String email, String password);
-  Future<String> register(
-      String email, String password, String nombre, String apellido);
-  Future<User> checkAuthStatus(String token);
+  Future<Usuario> login(String email, String contrasena);
+  Future<String> registro(
+      String email, String contrasena, String nombre, String apellido);
+  Future<Usuario> checarEstatusSesion(String token);
 }

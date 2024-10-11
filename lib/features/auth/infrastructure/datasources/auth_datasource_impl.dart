@@ -12,7 +12,7 @@ class AuthDatasourceImpl extends AuthDatasource {
   ));
 
   @override
-  Future<User> checkAuthStatus(String token) async {
+  Future<Usuario> checarEstatusSesion(String token) async {
     try {
       //TODO: Aqui va una peticion para verificar el token del usuario
       /*final response = await dio.get("",
@@ -20,21 +20,24 @@ class AuthDatasourceImpl extends AuthDatasource {
 
       final user = UserMapper.userJsonToEntity(response.data);
       return user;*/
-      return User(
+      return Usuario(
         nombreCompleto: 'Jose Daniel',
         email: '',
         id: 1,
         estatus: "1",
       );
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404) {
-        throw ErrorPersonalizado('Token incorrecto');
+      if (e.error is SocketException) {
+        throw ErrorPersonalizado(
+            'Error de red: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
       }
       if (e.type == DioExceptionType.connectionTimeout) {
-        throw ErrorPersonalizado('Revisar conexión a internet');
+        throw ErrorPersonalizado(
+            'Error de servidor: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
       }
       if (e.type == DioExceptionType.receiveTimeout) {
-        throw ErrorPersonalizado('El servidor tardó demasiado en responder');
+        throw ErrorPersonalizado(
+            'Error de servidor: El servidor tardó demasiado en responder');
       }
       throw Exception();
     } catch (e) {
@@ -43,12 +46,12 @@ class AuthDatasourceImpl extends AuthDatasource {
   }
 
   @override
-  Future<User> login(String email, String password) async {
+  Future<Usuario> login(String email, String contrasena) async {
     try {
       final response = await dio.post('/Administradores/Login',
-          data: {'email': email, 'contrasena': password});
+          data: {'email': email, 'contrasena': contrasena});
 
-      final user = UserMapper.userJsonToEntity(response.data);
+      final user = UsuarioMapper.userJsonToEntity(response.data);
       return user;
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
@@ -60,10 +63,12 @@ class AuthDatasourceImpl extends AuthDatasource {
             'Error de red: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
       }
       if (e.type == DioExceptionType.connectionTimeout) {
-        throw ErrorPersonalizado('Revisar conexión a internet');
+        throw ErrorPersonalizado(
+            'Error de servidor: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
       }
       if (e.type == DioExceptionType.receiveTimeout) {
-        throw ErrorPersonalizado('El servidor tardó demasiado en responder');
+        throw ErrorPersonalizado(
+            'Error de servidor: El servidor tardó demasiado en responder');
       }
       throw Exception();
     } catch (e) {
@@ -72,14 +77,14 @@ class AuthDatasourceImpl extends AuthDatasource {
   }
 
   @override
-  Future<String> register(
-      String email, String password, String nombre, String apellido) async {
+  Future<String> registro(
+      String email, String contrasena, String nombre, String apellido) async {
     try {
       final response = await dio.post('/Administradores/Registrar', data: {
         'nombre': nombre,
         'apellido': apellido,
         'email': email,
-        'contrasena': password
+        'contrasena': contrasena
       });
 
       final data = response.data as Map<String, dynamic>;
@@ -98,10 +103,12 @@ class AuthDatasourceImpl extends AuthDatasource {
             'Error de red: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
       }
       if (e.type == DioExceptionType.connectionTimeout) {
-        throw ErrorPersonalizado('Revisar conexión a internet');
+        throw ErrorPersonalizado(
+            'Error de servidor: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
       }
       if (e.type == DioExceptionType.receiveTimeout) {
-        throw ErrorPersonalizado('El servidor tardó demasiado en responder');
+        throw ErrorPersonalizado(
+            'Error de servidor: El servidor tardó demasiado en responder');
       }
       throw Exception();
     } catch (e) {
