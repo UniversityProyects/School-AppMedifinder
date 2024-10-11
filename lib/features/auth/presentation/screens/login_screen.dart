@@ -59,8 +59,8 @@ class _LoginForm extends ConsumerWidget {
     final loginForm = ref.watch(LoginFormProvider);
 
     ref.listen(authProvider, (previous, next) {
-      if (next.errorMessage.isEmpty) return;
-      showSnackBar(context, next.errorMessage);
+      if (next.mensajeError.isEmpty) return;
+      showSnackBar(context, next.mensajeError);
     });
 
     final textStyles = Theme.of(context).textTheme;
@@ -82,8 +82,9 @@ class _LoginForm extends ConsumerWidget {
             keyboardType: TextInputType.emailAddress,
             onChanged: (value) =>
                 ref.read(LoginFormProvider.notifier).onEmailChange(value),
-            errorMessage:
-                loginForm.isFormPosted ? loginForm.email.errorMessage : null,
+            errorMessage: loginForm.estaFormularioPosteado
+                ? loginForm.email.errorMessage
+                : null,
           ),
           const SizedBox(height: 30),
           CustomTextFormField(
@@ -91,8 +92,9 @@ class _LoginForm extends ConsumerWidget {
             obscureText: true,
             onChanged: (value) =>
                 ref.read(LoginFormProvider.notifier).onPasswordChange(value),
-            errorMessage:
-                loginForm.isFormPosted ? loginForm.password.errorMessage : null,
+            errorMessage: loginForm.estaFormularioPosteado
+                ? loginForm.contrasena.errorMessage
+                : null,
           ),
           const SizedBox(height: 30),
           SizedBox(
@@ -101,8 +103,8 @@ class _LoginForm extends ConsumerWidget {
               child: CustomFilledButton(
                 text: 'Iniciar sesión',
                 buttonColor: const Color(0xFF14967F),
-                isLoading: loginForm.isPosting,
-                onPressed: loginForm.isPosting
+                isLoading: loginForm.estaPosteado,
+                onPressed: loginForm.estaPosteado
                     ? null
                     : () {
                         // Llamamos a onFormSubmit solo cuando el botón es presionado

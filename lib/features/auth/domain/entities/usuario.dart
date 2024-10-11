@@ -1,10 +1,10 @@
-class User {
+class Usuario {
   final String nombreCompleto;
   final String email;
   final int id;
   final String estatus;
 
-  User({
+  Usuario({
     required this.nombreCompleto,
     required this.email,
     required this.id,

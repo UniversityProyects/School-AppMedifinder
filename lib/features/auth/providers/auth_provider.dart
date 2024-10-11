@@ -4,7 +4,7 @@ import 'package:medifinder_crm/features/auth/infrastructure/infrastructure.dart'
 import 'package:medifinder_crm/features/shared/infrastructure/services/key_value_storage_service.dart';
 import 'package:medifinder_crm/features/shared/infrastructure/services/key_value_storage_service_impl.dart';
 
-final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
+final authProvider = StateNotifierProvider<AuthNotifier, EstadoSesion>((ref) {
   final authRepository = AuthRepositoryImpl();
   final keyValueStorageService = KeyValueStorageServiceImpl();
 
@@ -14,23 +14,23 @@ final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   );
 });
 
-class AuthNotifier extends StateNotifier<AuthState> {
+class AuthNotifier extends StateNotifier<EstadoSesion> {
   final AuthRepository authRepository;
   final KeyValueStorageService keyValueStorageService;
 
   AuthNotifier({
     required this.authRepository,
     required this.keyValueStorageService,
-  }) : super(AuthState()) {
-    checkAuthStatus();
+  }) : super(EstadoSesion()) {
+    checarEstatusSesion();
   }
 
-  Future<void> loginUser(String email, String password) async {
+  Future<void> loginUsuario(String email, String contrasena) async {
     await Future.delayed(const Duration(milliseconds: 1000));
 
     try {
-      final user = await authRepository.login(email, password);
-      _setLoggedUser(user);
+      final usuario = await authRepository.login(email, contrasena);
+      _setLogeoUsuario(usuario);
     } on ErrorPersonalizado catch (e) {
       logout(e.mensaje);
     } catch (e) {
@@ -38,11 +38,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  void registerUser(
+  void registroUsuario(
       String email, String contrasena, String nombre, String apellido) async {
     try {
-      await authRepository.register(email, contrasena, nombre, apellido);
-      _setRegisterUser();
+      await authRepository.registro(email, contrasena, nombre, apellido);
+      _setRegistroUsuario();
     } on ErrorPersonalizado catch (e) {
       logout(e.mensaje);
     } catch (e) {
@@ -50,75 +50,76 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  void checkAuthStatus() async {
+  void checarEstatusSesion() async {
     final token = await keyValueStorageService.getValue<String>('token');
 
     if (token == null) return logout('');
 
     try {
-      final user = await authRepository.checkAuthStatus(token);
-      _setLoggedUser(user);
+      final usuario = await authRepository.checarEstatusSesion(token);
+      _setLogeoUsuario(usuario);
     } catch (e) {
       logout('');
     }
   }
 
-  void _setLoggedUser(User user) async {
+  void _setLogeoUsuario(Usuario usuario) async {
     //TODO: Aqui debo de guardar el token real
     await keyValueStorageService.setKeyValue('token', '123456789');
 
     state = state.copyWith(
-      user: user,
-      authStatus: AuthStatus.authenticated,
-      errorMessage: '',
+      usuario: usuario,
+      estatusSesion: EstatusSesion.autenticado,
+      mensajeError: '',
     );
   }
 
-  void _setRegisterUser() {
+  void _setRegistroUsuario() {
     state = state.copyWith(
-      registerStatus: true,
-      errorMessage: 'Registro Exitoso',
+      estatusRegistro: true,
+      mensajeError: 'Registro Exitoso',
     );
   }
 
-  Future<void> logout(String? errorMessage) async {
+  Future<void> logout(String? mensajeError) async {
     //TODO: limpiar token
 
     await keyValueStorageService.removeKey('token');
 
     state = state.copyWith(
-      authStatus: AuthStatus.notAuthenticated,
-      user: null,
-      errorMessage: errorMessage,
-      registerStatus: false,
+      estatusSesion: EstatusSesion.noAutenticado,
+      usuario: null,
+      mensajeError: mensajeError,
+      estatusRegistro: false,
     );
   }
 }
 
-enum AuthStatus { checking, authenticated, notAuthenticated }
+enum EstatusSesion { revisando, autenticado, noAutenticado }
 
-class AuthState {
-  final AuthStatus authStatus;
-  final User? user;
-  final String errorMessage;
-  final bool registerStatus;
+class EstadoSesion {
+  final EstatusSesion estatusSesion;
+  final Usuario? usuario;
+  final String mensajeError;
+  final bool estatusRegistro;
 
-  AuthState({
-    this.authStatus = AuthStatus.checking,
-    this.user,
-    this.errorMessage = '',
-    this.registerStatus = false,
+  EstadoSesion({
+    this.estatusSesion = EstatusSesion.revisando,
+    this.usuario,
+    this.mensajeError = '',
+    this.estatusRegistro = false,
   });
 
-  AuthState copyWith(
-          {AuthStatus? authStatus,
-          User? user,
-          String? errorMessage,
-          bool? registerStatus}) =>
-      AuthState(
-        authStatus: authStatus ?? this.authStatus,
-        user: user ?? this.user,
-        errorMessage: errorMessage ?? this.errorMessage,
-        registerStatus: registerStatus ?? this.registerStatus,
+  EstadoSesion copyWith({
+    EstatusSesion? estatusSesion,
+    Usuario? usuario,
+    String? mensajeError,
+    bool? estatusRegistro,
+  }) =>
+      EstadoSesion(
+        estatusSesion: estatusSesion ?? this.estatusSesion,
+        usuario: usuario ?? this.usuario,
+        mensajeError: mensajeError ?? this.mensajeError,
+        estatusRegistro: estatusRegistro ?? this.estatusRegistro,
       );
 }

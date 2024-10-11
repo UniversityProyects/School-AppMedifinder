@@ -5,41 +5,42 @@ import 'package:medifinder_crm/features/auth/providers/auth_provider.dart';
 import 'package:medifinder_crm/features/shared/shared.dart';
 
 class LoginFormState {
-  final bool isPosting;
-  final bool isFormPosted;
-  final bool isValid;
+  final bool estaPosteado;
+  final bool estaFormularioPosteado;
+  final bool esValido;
   final Email email;
-  final Password password;
+  final Password contrasena;
 
   LoginFormState(
-      {this.isPosting = false,
-      this.isFormPosted = false,
-      this.isValid = false,
+      {this.estaPosteado = false,
+      this.estaFormularioPosteado = false,
+      this.esValido = false,
       this.email = const Email.pure(),
-      this.password = const Password.pure()});
+      this.contrasena = const Password.pure()});
 
   LoginFormState copyWith(
-          {bool? isPosting,
-          bool? isFormPosted,
-          bool? isValid,
+          {bool? estaPosteado,
+          bool? estaFormularioPosteado,
+          bool? esValido,
           Email? email,
-          Password? password}) =>
+          Password? contrasena}) =>
       LoginFormState(
-          isPosting: isPosting ?? this.isPosting,
-          isFormPosted: isFormPosted ?? this.isFormPosted,
-          isValid: isValid ?? this.isValid,
+          estaPosteado: estaPosteado ?? this.estaPosteado,
+          estaFormularioPosteado:
+              estaFormularioPosteado ?? this.estaFormularioPosteado,
+          esValido: esValido ?? this.esValido,
           email: email ?? this.email,
-          password: password ?? this.password);
+          contrasena: contrasena ?? this.contrasena);
 
   @override
   String toString() {
     return '''
       LoginFormState:
-        isPosting: $isPosting
-        isFormPosted: $isFormPosted
-        isValid: $isValid
+        estaPosteado: $estaPosteado
+        estaFormularioPosteado: $estaFormularioPosteado
+        esValido: $esValido
         email: $email
-        password: $password
+        contrasena: $contrasena
     ''';
   }
 }
@@ -55,44 +56,45 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
   onEmailChange(String value) {
     final newEmail = Email.dirty(value);
     state = state.copyWith(
-        email: newEmail, isValid: Formz.validate([newEmail, state.password]));
+        email: newEmail,
+        esValido: Formz.validate([newEmail, state.contrasena]));
   }
 
   onPasswordChange(String value) {
     final newPassword = Password.dirty(value);
     state = state.copyWith(
-        password: newPassword,
-        isValid: Formz.validate([newPassword, state.email]));
+        contrasena: newPassword,
+        esValido: Formz.validate([newPassword, state.email]));
   }
 
   onFormSubmit() async {
     _touchEverField();
 
-    if (!state.isValid) return;
+    if (!state.esValido) return;
 
-    state = state.copyWith(isPosting: true);
+    state = state.copyWith(estaPosteado: true);
 
-    await loginUserCallback(state.email.value, state.password.value);
+    await loginUserCallback(state.email.value, state.contrasena.value);
 
-    state = state.copyWith(isPosting: false);
+    state = state.copyWith(estaPosteado: false);
   }
 
   _touchEverField() {
     final email = Email.dirty(state.email.value);
-    final password = Password.dirty(state.password.value);
+    final contrasena = Password.dirty(state.contrasena.value);
 
     state = state.copyWith(
-        isFormPosted: true,
+        estaFormularioPosteado: true,
         email: email,
-        password: password,
-        isValid: Formz.validate([email, password]));
+        contrasena: contrasena,
+        esValido: Formz.validate([email, contrasena]));
   }
 }
 
 //paso 3. como consumir el state
 final LoginFormProvider =
     StateNotifierProvider.autoDispose<LoginFormNotifier, LoginFormState>((ref) {
-  final loginUserCallback = ref.watch(authProvider.notifier).loginUser;
+  final loginUserCallback = ref.watch(authProvider.notifier).loginUsuario;
 
   return LoginFormNotifier(loginUserCallback: loginUserCallback);
 });

@@ -1,11 +1,10 @@
-class WrongCredentials implements Exception {}
+class CredencialesIncorrectas implements Exception {}
 
-class ConnectionTimeOut implements Exception {}
+class TiempoEsperaConexion implements Exception {}
 
-class InvalidToken implements Exception {}
+class TokenInvalido implements Exception {}
 
 class ErrorPersonalizado implements Exception {
   final String mensaje;
-  // final int errorCode;
   ErrorPersonalizado(this.mensaje);
 }
