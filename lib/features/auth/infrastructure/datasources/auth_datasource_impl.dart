@@ -54,9 +54,15 @@ class AuthDatasourceImpl extends AuthDatasource {
       final user = UsuarioMapper.userJsonToEntity(response.data);
       return user;
     } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        throw ErrorPersonalizado(e.response?.data['mensaje']);
+      }
       if (e.response?.statusCode == 401) {
         throw ErrorPersonalizado(
-            e.response?.data ?? 'Credenciales incorrectas');
+            e.response?.data['mensaje'] ?? 'Credenciales incorrectas');
+      }
+      if (e.response?.statusCode == 500) {
+        throw ErrorPersonalizado(e.response?.data['mensaje']);
       }
       if (e.error is SocketException) {
         throw ErrorPersonalizado(
@@ -89,14 +95,13 @@ class AuthDatasourceImpl extends AuthDatasource {
 
       final data = response.data as Map<String, dynamic>;
 
-      if (data.containsKey('message')) {
-        return data['message']; // Aquí retornas el mensaje
-      } else {
-        throw ErrorPersonalizado('Respuesta inesperada de la API');
-      }
+      return "Administrador registrado correctamente";
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        throw ErrorPersonalizado(e.response?.data ?? 'Error de petición');
+        throw ErrorPersonalizado(e.response?.data['mensaje']);
+      }
+      if (e.response?.statusCode == 500) {
+        throw ErrorPersonalizado(e.response?.data['mensaje']);
       }
       if (e.error is SocketException) {
         throw ErrorPersonalizado(

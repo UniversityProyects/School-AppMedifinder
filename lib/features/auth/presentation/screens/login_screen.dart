@@ -95,6 +95,8 @@ class _LoginForm extends ConsumerWidget {
             errorMessage: loginForm.estaFormularioPosteado
                 ? loginForm.contrasena.errorMessage
                 : null,
+            onFieldSubmitted: (_) =>
+                ref.read(LoginFormProvider.notifier).onFormSubmit(),
           ),
           const SizedBox(height: 30),
           SizedBox(

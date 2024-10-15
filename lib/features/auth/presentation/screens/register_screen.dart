@@ -144,6 +144,8 @@ class _RegisterForm extends ConsumerWidget {
                         .confirmPasswordErrorMessage ??
                     registerForm.confirmacionContrasena.errorMessage
                 : null,
+            onFieldSubmitted: (_) =>
+                ref.read(RegisterFormProvider.notifier).onFormSubmit(),
           ),
           const SizedBox(height: 10),
           SizedBox(
