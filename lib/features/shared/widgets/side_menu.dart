@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medifinder_crm/features/auth/providers/providers.dart';
 import 'package:medifinder_crm/features/shared/shared.dart';
+import 'package:go_router/go_router.dart';
 
 class SideMenu extends ConsumerStatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -16,6 +17,29 @@ class SideMenuState extends ConsumerState<SideMenu> {
   int navDrawerIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _updateNavDrawerIndex(); // Inicializa el índice del menú
+  }
+
+  void _updateNavDrawerIndex() {
+    final currentPath =
+        GoRouter.of(context).routerDelegate.currentConfiguration.uri.toString();
+
+    switch (currentPath) {
+      case '/':
+        navDrawerIndex = 0;
+        break;
+      case '/satisfaccionPaciente':
+        navDrawerIndex = 1;
+        break;
+      default:
+        navDrawerIndex = -1; // Opción no seleccionada
+        break;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final hasNotch = MediaQuery.of(context).viewPadding.top > 35;
     final textStyles = Theme.of(context).textTheme;
@@ -27,6 +51,18 @@ class SideMenuState extends ConsumerState<SideMenu> {
           setState(() {
             navDrawerIndex = value;
           });
+
+          switch (value) {
+            case 0: // Satisfacción Pacientes
+              context.go('/');
+              break;
+            case 1: // Satisfacción Pacientes
+              context.go('/satisfaccionPaciente');
+              break;
+            // Agrega más casos para otras rutas si es necesario
+            default:
+              break;
+          }
 
           // Aquí podrías navegar a cada pantalla del CRM según el índice seleccionado
           widget.scaffoldKey.currentState?.closeDrawer();
@@ -40,57 +76,13 @@ class SideMenuState extends ConsumerState<SideMenu> {
             padding: const EdgeInsets.fromLTRB(20, 0, 16, 10),
             child: Text('Tony Stark', style: textStyles.titleSmall),
           ),
-
-          // Sección: Gestión de Doctores
           const NavigationDrawerDestination(
             icon: Icon(Icons.medical_services_outlined),
-            label: Text('Gestión de Doctores'),
+            label: Text('Home'),
           ),
-          const NavigationDrawerDestination(
-            icon: Icon(Icons.assignment_outlined),
-            label: Text('Validación de Perfiles'),
-          ),
-          const NavigationDrawerDestination(
-            icon: Icon(Icons.credit_card_outlined),
-            label: Text('Suscripciones y Pagos'),
-          ),
-          const NavigationDrawerDestination(
-            icon: Icon(Icons.schedule_outlined),
-            label: Text('Agenda de Citas'),
-          ),
-
           const Padding(
             padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
             child: Divider(),
-          ),
-
-          // Sección: Gestión de Pacientes
-          const NavigationDrawerDestination(
-            icon: Icon(Icons.person_outline),
-            label: Text('Gestión de Pacientes'),
-          ),
-          const NavigationDrawerDestination(
-            icon: Icon(Icons.history_outlined),
-            label: Text('Historial de Citas'),
-          ),
-          const NavigationDrawerDestination(
-            icon: Icon(Icons.receipt_long_outlined),
-            label: Text('Pagos y Facturación'),
-          ),
-
-          const Padding(
-            padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
-            child: Divider(),
-          ),
-
-          // Sección: Reportes y Analítica
-          const NavigationDrawerDestination(
-            icon: Icon(Icons.analytics_outlined),
-            label: Text('Reportes y Análisis'),
-          ),
-          const NavigationDrawerDestination(
-            icon: Icon(Icons.bar_chart_outlined),
-            label: Text('Rendimiento de Médicos'),
           ),
           const NavigationDrawerDestination(
             icon: Icon(Icons.insert_chart_outlined),
