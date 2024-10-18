@@ -5,7 +5,6 @@ import 'package:medifinder_crm/features/auth/auth.dart';
 import 'package:medifinder_crm/features/auth/presentation/providers/auth_provider.dart';
 import 'package:medifinder_crm/features/home/principal.dart';
 import 'package:medifinder_crm/features/satisfaccionPaciente/satisfaccionPaciente.dart';
-import 'package:medifinder_crm/features/products/presentation/screens/products_screen.dart';
 
 final goRouterProvider = Provider((ref) {
   final goRouteNotifier = ref.read(GoRouterNotifierProvider);
@@ -37,12 +36,6 @@ final goRouterProvider = Provider((ref) {
           path: '/satisfaccionPaciente',
           builder: (context, state) => const SatisfaccionpacienteScreen(),
         ),
-        GoRoute(
-          path: '/comentarios-medico/:idMedico',
-          builder: (context, state) => ComentariosMedicoScreen(
-            idMedico: state.pathParameters['idMedico'] ?? 'no-id-medico',
-          ),
-        )
       ],
 
       ///! TODO: Bloquear si no se está autenticado de alguna manera
