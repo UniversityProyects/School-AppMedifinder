@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medifinder_crm/features/auth/providers/auth_provider.dart';
-import 'package:medifinder_crm/features/auth/providers/login_form_provider.dart';
+import 'package:medifinder_crm/features/auth/presentation/providers/auth_provider.dart';
+import 'package:medifinder_crm/features/auth/presentation/providers/login_form_provider.dart';
 import 'package:medifinder_crm/features/shared/shared.dart';
 
 class LoginScreen extends StatelessWidget {
