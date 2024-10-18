@@ -1,7 +1,7 @@
 //Paso 1. crear el state del provider
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
-import 'package:medifinder_crm/features/auth/providers/auth_provider.dart';
+import 'package:medifinder_crm/features/auth/presentation/providers/auth_provider.dart';
 import 'package:medifinder_crm/features/shared/shared.dart';
 
 class RegisterFormState {
