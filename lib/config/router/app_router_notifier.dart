@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:medifinder_crm/features/auth/providers/auth_provider.dart';
+import 'package:medifinder_crm/features/auth/presentation/providers/auth_provider.dart';
 
 final GoRouterNotifierProvider = Provider((ref) {
   final authNotifier = ref.read(authProvider.notifier);

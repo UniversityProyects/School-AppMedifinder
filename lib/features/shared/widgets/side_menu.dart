@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:medifinder_crm/features/auth/providers/providers.dart';
+import 'package:medifinder_crm/features/auth/presentation/providers/providers.dart';
 import 'package:medifinder_crm/features/shared/shared.dart';
 import 'package:go_router/go_router.dart';
 
