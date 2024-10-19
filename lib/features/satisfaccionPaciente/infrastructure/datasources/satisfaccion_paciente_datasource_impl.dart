@@ -1,7 +1,8 @@
 import 'package:medifinder_crm/features/satisfaccionPaciente/domain/domain.dart';
 import 'package:dio/dio.dart';
 import 'package:medifinder_crm/config/config.dart';
-import 'package:medifinder_crm/features/satisfaccionPaciente/infrastructure/mappers/calificacion_medico_mapper.dart';
+import 'package:medifinder_crm/features/satisfaccionPaciente/infrastructure/errors/satisfaccion_paciente_errors.dart';
+import 'package:medifinder_crm/features/satisfaccionPaciente/infrastructure/mappers/mappers.dart';
 
 class SatisfaccionPacienteDatasourceImpl
     extends SatisfaccionPacienteDatasource {
@@ -32,8 +33,22 @@ class SatisfaccionPacienteDatasourceImpl
 
   @override
   Future<List<ComentarioMedico>> obtenerComentariosPorIdMedico(
-      String idMedico) {
-    // TODO: implement obtenerComentariosPorIdMedico
-    throw UnimplementedError();
+      String idMedico) async {
+    try {
+      final response =
+          await dio.get('/CMRMovil/ListadoComentariosPorMedico/${idMedico}');
+      final List<ComentarioMedico> listaComentariosMedico = [];
+      for (var comentario in response.data ?? []) {
+        listaComentariosMedico
+            .add(ComentarioMedicoMapper.JsonToEntity(comentario));
+      }
+
+      return listaComentariosMedico;
+    } on DioException catch (e) {
+      if (e.response!.statusCode == 404) throw MedicoNoEncontrado();
+      throw Exception();
+    } catch (e) {
+      throw Exception();
+    }
   }
 }

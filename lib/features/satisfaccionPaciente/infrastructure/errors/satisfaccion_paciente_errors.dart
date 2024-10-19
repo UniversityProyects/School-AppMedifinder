@@ -1,0 +1,1 @@
+class MedicoNoEncontrado implements Exception {}
