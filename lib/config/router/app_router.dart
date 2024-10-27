@@ -2,9 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medifinder_crm/config/router/app_router_notifier.dart';
 import 'package:medifinder_crm/features/auth/auth.dart';
-import 'package:medifinder_crm/features/auth/providers/auth_provider.dart';
+import 'package:medifinder_crm/features/auth/presentation/providers/auth_provider.dart';
 import 'package:medifinder_crm/features/home/principal.dart';
-import 'package:medifinder_crm/features/products/presentation/screens/products_screen.dart';
+import 'package:medifinder_crm/features/satisfaccionPaciente/satisfaccionPaciente.dart';
 
 final goRouterProvider = Provider((ref) {
   final goRouteNotifier = ref.read(GoRouterNotifierProvider);
@@ -27,13 +27,20 @@ final goRouterProvider = Provider((ref) {
           builder: (context, state) => const RegisterScreen(),
         ),
         GoRoute(
-          path: '/satisfaccionPaciente',
-          builder: (context, state) => const ProductsScreen(),
-        ),
-        GoRoute(
           path: '/',
           builder: (context, state) => const HomeScreen(),
         ),
+        //Rutas  de satisfaccionPaciente
+        GoRoute(
+          path: '/satisfaccionPaciente',
+          builder: (context, state) => const SatisfaccionpacienteScreen(),
+        ),
+        GoRoute(
+          path: '/comentarios-medico/:idMedico',
+          builder: (context, state) => ComentariosMedicoScreen(
+            idMedico: state.pathParameters['idMedico'] ?? 'no-id-medico',
+          ),
+        )
       ],
 
       ///! TODO: Bloquear si no se está autenticado de alguna manera
