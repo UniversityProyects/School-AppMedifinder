@@ -13,48 +13,50 @@ class CalificacionMedicoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
-      margin: const EdgeInsets.only(bottom: 10.0),
+      margin: const EdgeInsets.all(2.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center, // Alinear en el centro
+          crossAxisAlignment:
+              CrossAxisAlignment.center, // Alinear al centro horizontalmente
+          mainAxisSize: MainAxisSize.min, // Limitar tamaño al contenido
           children: [
-            Icon(Icons.medical_services,
-                color: Theme.of(context).primaryColor,
-                size: 40), // Ícono de médico con color primario
-            const SizedBox(width: 16), // Espacio entre el ícono y el texto
-            Expanded(
-              // Se usa Expanded para que el contenido ocupe el resto del espacio
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${calificacionMedico.nombre} ${calificacionMedico.apellido}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  _buildEstrellas(calificacionMedico.promedioPuntuacion),
-                  const SizedBox(height: 4),
-                  Text(
-                    calificacionMedico.promedioPuntuacion > 0
-                        ? '${calificacionMedico.promedioPuntuacion}'
-                        : 'Sin calificación',
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    calificacionMedico.cantidadComentarios > 0
-                        ? 'Comentarios: ${calificacionMedico.cantidadComentarios}'
-                        : 'No hay comentarios',
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
+            CircleAvatar(
+              radius: 40,
+              backgroundColor: Theme.of(context).primaryColor,
+              child: const Icon(
+                Icons.person,
+                size: 40,
+                color: Colors.white,
               ),
+            ),
+            const SizedBox(height: 8), // Espacio entre el avatar y el nombre
+            Text(
+              '${calificacionMedico.nombre} ${calificacionMedico.apellido}',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 4),
+            _buildEstrellas(calificacionMedico.promedioPuntuacion),
+            const SizedBox(height: 2),
+            Text(
+              calificacionMedico.promedioPuntuacion > 0
+                  ? '${calificacionMedico.promedioPuntuacion}'
+                  : 'Sin calificación',
+            ),
+            const SizedBox(height: 4),
+            Text(
+              calificacionMedico.cantidadComentarios > 0
+                  ? 'Comentarios: ${calificacionMedico.cantidadComentarios}'
+                  : 'No hay comentarios',
+              style: const TextStyle(color: Colors.grey),
             ),
           ],
         ),
@@ -62,12 +64,12 @@ class CalificacionMedicoCard extends StatelessWidget {
     );
   }
 
-  // Método para construir las estrellas según la calificación
   Widget _buildEstrellas(double calificacion) {
     int estrellasLlenas = calificacion.floor();
     bool tieneMediaEstrella = (calificacion - estrellasLlenas) >= 0.5;
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(5, (index) {
         if (index < estrellasLlenas) {
           return const Icon(Icons.star, color: Colors.amber);

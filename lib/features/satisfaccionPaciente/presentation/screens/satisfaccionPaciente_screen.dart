@@ -19,11 +19,6 @@ class SatisfaccionpacienteScreen extends StatelessWidget {
         title: const Text('Satisfacción Paciente'),
       ),
       body: const _SatisfaccionPacienteView(),
-      floatingActionButton: FloatingActionButton.extended(
-        label: const Text('Nuevo producto'),
-        icon: const Icon(Icons.add),
-        onPressed: () {},
-      ),
     );
   }
 }
@@ -56,24 +51,28 @@ class _SatisfaccionPacienteViewState extends ConsumerState {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (satisfaccionPacienteState.calificacionesMedico.isEmpty) {
-      return const Center(child: Text('No hay calificaciones disponibles.'));
-    }
-
-    return ListView.builder(
+    return Padding(
       padding: const EdgeInsets.all(16.0),
-      itemCount: satisfaccionPacienteState.calificacionesMedico.length,
-      itemBuilder: (context, index) {
-        final calificacion =
-            satisfaccionPacienteState.calificacionesMedico[index];
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, // 2 columnas
+          crossAxisSpacing: 16.0,
+          mainAxisSpacing: 16.0,
+          childAspectRatio: 0.75, // Ajustar relación de aspecto
+        ),
+        itemCount: satisfaccionPacienteState.calificacionesMedico.length,
+        itemBuilder: (context, index) {
+          final calificacion =
+              satisfaccionPacienteState.calificacionesMedico[index];
 
-        return GestureDetector(
-          onTap: () => context.push('/comentarios-medico/${calificacion.id}'),
-          child: CalificacionMedicoCard(
-            calificacionMedico: calificacion,
-          ),
-        );
-      },
+          return GestureDetector(
+            onTap: () => context.push('/comentarios-medico/${calificacion.id}'),
+            child: CalificacionMedicoCard(
+              calificacionMedico: calificacion,
+            ),
+          );
+        },
+      ),
     );
   }
 }

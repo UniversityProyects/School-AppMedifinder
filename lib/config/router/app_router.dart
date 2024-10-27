@@ -5,6 +5,9 @@ import 'package:medifinder_crm/features/auth/auth.dart';
 import 'package:medifinder_crm/features/auth/presentation/providers/auth_provider.dart';
 import 'package:medifinder_crm/features/home/principal.dart';
 import 'package:medifinder_crm/features/satisfaccionPaciente/satisfaccionPaciente.dart';
+import 'package:medifinder_crm/features/suscripcionMedico/presentation/screens/sucripciones_medico_screen.dart';
+import 'package:medifinder_crm/features/suscripcionMedico/presentation/screens/suscripcion_medico_screen.dart';
+import 'package:medifinder_crm/features/tipoSuscripcion/tipo_suscripcion.dart';
 
 final goRouterProvider = Provider((ref) {
   final goRouteNotifier = ref.read(GoRouterNotifierProvider);
@@ -41,7 +44,23 @@ final goRouterProvider = Provider((ref) {
           builder: (context, state) => ComentariosMedicoScreen(
             idMedico: state.pathParameters['idMedico'] ?? 'no-id-medico',
           ),
-        )
+        ),
+        //Rutas de tipos de suscripciones
+        GoRoute(
+          path: '/tipo-suscripcion',
+          builder: (context, state) => TipoSuscripcionScreen(),
+        ),
+        //Rutas para suscripciones de medicos
+        GoRoute(
+          path: "/suscripcion-medico",
+          builder: (context, state) => SuscripcionMedicoScreen(),
+        ),
+        GoRoute(
+          path: '/suscripciones-medico/:idMedico',
+          builder: (context, state) => SucripcionesMedicoScreen(
+            idMedico: state.pathParameters['idMedico'] ?? 'no-id-medico',
+          ),
+        ),
       ],
 
       ///! TODO: Bloquear si no se está autenticado de alguna manera

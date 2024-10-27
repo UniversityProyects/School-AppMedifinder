@@ -43,6 +43,7 @@ class SideMenuState extends ConsumerState<SideMenu> {
   Widget build(BuildContext context) {
     final hasNotch = MediaQuery.of(context).viewPadding.top > 35;
     final textStyles = Theme.of(context).textTheme;
+    final estadoSesion = ref.watch(authProvider);
 
     return NavigationDrawer(
         elevation: 1,
@@ -59,6 +60,11 @@ class SideMenuState extends ConsumerState<SideMenu> {
             case 1: // Satisfacción Pacientes
               context.go('/satisfaccionPaciente');
               break;
+            case 2:
+              context.go('/tipo-suscripcion');
+              break;
+            case 3:
+              context.go('/suscripcion-medico');
             // Agrega más casos para otras rutas si es necesario
             default:
               break;
@@ -68,16 +74,48 @@ class SideMenuState extends ConsumerState<SideMenu> {
           widget.scaffoldKey.currentState?.closeDrawer();
         },
         children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, hasNotch ? 0 : 20, 16, 0),
-            child: Text('Saludos', style: textStyles.titleMedium),
+          UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+                /*gradient:
+                    LinearGradient(colors: [Colors.teal, Colors.tealAccent])*/
+                color: Theme.of(context).primaryColor),
+            accountName: Text('${estadoSesion.usuario?.nombreCompleto}'),
+            accountEmail: Text('${estadoSesion.usuario?.email}'),
+            currentAccountPicture: CircleAvatar(
+              radius: 40,
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.person,
+                size: 40,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+            onDetailsPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Detalles de la cuenta'),
+                    content: const Text(
+                        'Aquí podrías mostrar más detalles del usuario.'),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('Cerrar'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 16, 10),
-            child: Text('Tony Stark', style: textStyles.titleSmall),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
           ),
           const NavigationDrawerDestination(
-            icon: Icon(Icons.medical_services_outlined),
+            icon: Icon(Icons.home_outlined),
             label: Text('Home'),
           ),
           const Padding(
@@ -85,10 +123,17 @@ class SideMenuState extends ConsumerState<SideMenu> {
             child: Divider(),
           ),
           const NavigationDrawerDestination(
-            icon: Icon(Icons.insert_chart_outlined),
+            icon: Icon(Icons.sentiment_satisfied_alt_outlined),
             label: Text('Satisfacción del Paciente'),
           ),
-
+          const NavigationDrawerDestination(
+            icon: Icon(Icons.subscriptions_outlined),
+            label: Text('Tipos Suscripciones'),
+          ),
+          const NavigationDrawerDestination(
+            icon: Icon(Icons.local_hospital_outlined),
+            label: Text('Suscripción Médico'),
+          ),
           const Padding(
             padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
             child: Divider(),
