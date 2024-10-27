@@ -37,6 +37,7 @@ class ComentariosMedicoNotifier extends StateNotifier<ComentariosMedicoState> {
         comentariosMedico: comentariosMedico,
       );
     } catch (e) {
+      //TODO: Manejar el error
       print(e);
     }
   }
