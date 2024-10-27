@@ -1,5 +1,6 @@
 import 'package:medifinder_crm/features/satisfaccionPaciente/domain/domain.dart';
 import 'package:dio/dio.dart';
+import 'dart:io';
 import 'package:medifinder_crm/config/config.dart';
 import 'package:medifinder_crm/features/satisfaccionPaciente/infrastructure/errors/satisfaccion_paciente_errors.dart';
 import 'package:medifinder_crm/features/satisfaccionPaciente/infrastructure/mappers/mappers.dart';
@@ -14,15 +15,37 @@ class SatisfaccionPacienteDatasourceImpl
 
   @override
   Future<List<CalificacionMedico>> obtenerCalificacionesMedicos() async {
-    final respuesta =
-        await dio.get<List>("/CMRMovil/PromedioCalificacionMedico");
-    final List<CalificacionMedico> listaCalificacionesMedicos = [];
-    for (var comentario in respuesta.data ?? []) {
-      listaCalificacionesMedicos
-          .add(CalificacionMedicoMapper.JsonToEntity(comentario));
-    }
+    try {
+      final respuesta =
+          await dio.get<List>("/CMRMovil/PromedioCalificacionMedico");
+      final List<CalificacionMedico> listaCalificacionesMedicos = [];
+      for (var comentario in respuesta.data ?? []) {
+        listaCalificacionesMedicos
+            .add(CalificacionMedicoMapper.JsonToEntity(comentario));
+      }
 
-    return listaCalificacionesMedicos;
+      return listaCalificacionesMedicos;
+    } on DioException catch (e) {
+      if (e.error is SocketException) {
+        throw ErrorPersonalizado(
+            'Error de red: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
+      }
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw ErrorPersonalizado(
+            'Error de servidor: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
+      }
+      if (e.type == DioExceptionType.receiveTimeout) {
+        throw ErrorPersonalizado(
+            'Error de servidor: El servidor tardó demasiado en responder');
+      }
+      if (e.response!.statusCode == 500) {
+        throw ErrorPersonalizado(
+            e.response?.data['mensaje'] ?? 'Credenciales incorrectas');
+      }
+      throw Exception();
+    } catch (e) {
+      throw Exception();
+    }
   }
 
   @override
@@ -45,6 +68,18 @@ class SatisfaccionPacienteDatasourceImpl
 
       return listaComentariosMedico;
     } on DioException catch (e) {
+      if (e.error is SocketException) {
+        throw ErrorPersonalizado(
+            'Error de red: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
+      }
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw ErrorPersonalizado(
+            'Error de servidor: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
+      }
+      if (e.type == DioExceptionType.receiveTimeout) {
+        throw ErrorPersonalizado(
+            'Error de servidor: El servidor tardó demasiado en responder');
+      }
       if (e.response!.statusCode == 404) throw MedicoNoEncontrado();
       throw Exception();
     } catch (e) {

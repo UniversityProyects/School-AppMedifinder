@@ -60,6 +60,11 @@ class SideMenuState extends ConsumerState<SideMenu> {
             case 1: // Satisfacción Pacientes
               context.go('/satisfaccionPaciente');
               break;
+            case 2:
+              context.go('/tipo-suscripcion');
+              break;
+            case 3:
+              context.go('/suscripcion-medico');
             // Agrega más casos para otras rutas si es necesario
             default:
               break;
@@ -110,7 +115,7 @@ class SideMenuState extends ConsumerState<SideMenu> {
             padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
           ),
           const NavigationDrawerDestination(
-            icon: Icon(Icons.medical_services_outlined),
+            icon: Icon(Icons.home_outlined),
             label: Text('Home'),
           ),
           const Padding(
@@ -118,8 +123,16 @@ class SideMenuState extends ConsumerState<SideMenu> {
             child: Divider(),
           ),
           const NavigationDrawerDestination(
-            icon: Icon(Icons.insert_chart_outlined),
+            icon: Icon(Icons.sentiment_satisfied_alt_outlined),
             label: Text('Satisfacción del Paciente'),
+          ),
+          const NavigationDrawerDestination(
+            icon: Icon(Icons.subscriptions_outlined),
+            label: Text('Tipos Suscripciones'),
+          ),
+          const NavigationDrawerDestination(
+            icon: Icon(Icons.local_hospital_outlined),
+            label: Text('Suscripción Médico'),
           ),
           const Padding(
             padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
