@@ -36,6 +36,12 @@ final goRouterProvider = Provider((ref) {
           path: '/satisfaccionPaciente',
           builder: (context, state) => const SatisfaccionpacienteScreen(),
         ),
+        GoRoute(
+          path: '/comentarios-medico/:idMedico',
+          builder: (context, state) => ComentariosMedicoScreen(
+            idMedico: state.pathParameters['idMedico'] ?? 'no-id-medico',
+          ),
+        )
       ],
 
       ///! TODO: Bloquear si no se está autenticado de alguna manera
