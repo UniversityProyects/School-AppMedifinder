@@ -5,6 +5,7 @@ import 'package:medifinder_crm/features/auth/auth.dart';
 import 'package:medifinder_crm/features/auth/presentation/providers/auth_provider.dart';
 import 'package:medifinder_crm/features/home/principal.dart';
 import 'package:medifinder_crm/features/satisfaccionPaciente/satisfaccionPaciente.dart';
+import 'package:medifinder_crm/features/suscripcionMedico/presentation/screens/detalle_suscripcion_medico.dart';
 import 'package:medifinder_crm/features/suscripcionMedico/presentation/screens/sucripciones_medico_screen.dart';
 import 'package:medifinder_crm/features/suscripcionMedico/presentation/screens/suscripcion_medico_screen.dart';
 import 'package:medifinder_crm/features/tipoSuscripcion/tipo_suscripcion.dart';
@@ -61,6 +62,13 @@ final goRouterProvider = Provider((ref) {
             idMedico: state.pathParameters['idMedico'] ?? 'no-id-medico',
           ),
         ),
+        GoRoute(
+          path: '/detalle-suscripcion-medico/:idSuscripcion',
+          builder: (context, state) => DetalleSuscripcionMedicoScreen(
+            idSuscripcion:
+                state.pathParameters['idSuscripcion'] ?? 'no-id-suscripcion',
+          ),
+        )
       ],
 
       ///! TODO: Bloquear si no se está autenticado de alguna manera

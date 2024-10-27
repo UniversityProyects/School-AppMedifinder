@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:medifinder_crm/config/router/app_router.dart';
+import 'package:medifinder_crm/features/auth/presentation/screens/login_screen.dart';
 import 'package:medifinder_crm/features/shared/shared.dart';
 import 'package:medifinder_crm/features/suscripcionMedico/domain/domain.dart';
 import 'package:medifinder_crm/features/suscripcionMedico/presentation/providers/suscripciones_medico_provider.dart';
@@ -85,85 +88,89 @@ class _SuscripcionesMedicoView extends StatelessWidget {
           itemCount: primerSuscripcion.suscripciones.length,
           itemBuilder: (context, index) {
             final suscripcion = primerSuscripcion.suscripciones[index];
-            return Card(
-              elevation: 4,
-              margin: const EdgeInsets.only(bottom: 16.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      suscripcion.nombreTipoSuscripcion,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      suscripcion.descripcionTipoSuscripcion,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const Divider(height: 20, color: Colors.grey),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Precio: \$${suscripcion.precioTipoSuscripcion.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+            return GestureDetector(
+              onTap: () => context.push(
+                  '/detalle-suscripcion-medico/${suscripcion.idSuscripcion}'),
+              child: Card(
+                elevation: 4,
+                margin: const EdgeInsets.only(bottom: 16.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        suscripcion.nombreTipoSuscripcion,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 4,
-                            horizontal: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: suscripcion.estatusPago == "PAGADA"
-                                ? Colors.green.withOpacity(0.2)
-                                : Colors.red.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            suscripcion.estatusPago,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: suscripcion.estatusPago == "PAGADA"
-                                  ? Colors.green
-                                  : Colors.red,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        suscripcion.descripcionTipoSuscripcion,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const Divider(height: 20, color: Colors.grey),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Precio: \$${suscripcion.precioTipoSuscripcion.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    if (suscripcion.fechaPago != null)
-                      Row(
-                        children: [
-                          const Icon(Icons.calendar_today,
-                              size: 16, color: Colors.blue),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Fecha de pago: ${suscripcion.fechaPago}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.blue,
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: suscripcion.estatusPago == "PAGADA"
+                                  ? Colors.green.withOpacity(0.2)
+                                  : Colors.red.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              suscripcion.estatusPago,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: suscripcion.estatusPago == "PAGADA"
+                                    ? Colors.green
+                                    : Colors.red,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                  ],
+                      const SizedBox(height: 8),
+                      if (suscripcion.fechaPago != null)
+                        Row(
+                          children: [
+                            const Icon(Icons.calendar_today,
+                                size: 16, color: Colors.blue),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Fecha de pago: ${suscripcion.fechaPago}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
                 ),
               ),
             );
