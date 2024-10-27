@@ -19,6 +19,11 @@ class SatisfaccionpacienteScreen extends StatelessWidget {
         title: const Text('Satisfacción Paciente'),
       ),
       body: const _SatisfaccionPacienteView(),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('Nuevo producto'),
+        icon: const Icon(Icons.add),
+        onPressed: () {},
+      ),
     );
   }
 }
@@ -49,6 +54,10 @@ class _SatisfaccionPacienteViewState extends ConsumerState {
 
     if (satisfaccionPacienteState.estaCargando) {
       return const Center(child: CircularProgressIndicator());
+    }
+
+    if (satisfaccionPacienteState.calificacionesMedico.isEmpty) {
+      return const Center(child: Text('No hay calificaciones disponibles.'));
     }
 
     return ListView.builder(

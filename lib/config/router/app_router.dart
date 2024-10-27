@@ -26,6 +26,7 @@ final goRouterProvider = Provider((ref) {
           path: '/register',
           builder: (context, state) => const RegisterScreen(),
         ),
+        //Rutas de pagina principal
         GoRoute(
           path: '/',
           builder: (context, state) => const HomeScreen(),
