@@ -1,6 +1,6 @@
 name: medifinder_crm
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -37,7 +37,7 @@ flutter:
   uses-material-design: true
   assets:
     - .env
-    - assets/loaders/
+    # - assets/loaders/
     - assets/images/logo_columna.png
     - assets/images/login.jpg
     - google_fonts/montserrat_alternates/
