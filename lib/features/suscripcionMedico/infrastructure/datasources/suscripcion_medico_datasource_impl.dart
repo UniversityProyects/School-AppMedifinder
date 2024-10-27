@@ -24,7 +24,9 @@ class SuscripcionMedicoDatasourceImpl extends SuscripcionMedicoDatasource {
     final DetalleSuscripcionMedico detalleSuscripcionMedico;
     //Iteracion para mapear y guardar los resultados en la lista
     detalleSuscripcionMedico =
-        DetalleSuscripcionMedicoMapper.jsonToEntity(respuesta.data);
+        DetalleSuscripcionMedicoMapper.jsonToEntity(respuesta.data.first);
+
+    print(respuesta.data.first);
     //Retorno de la lista
     return detalleSuscripcionMedico;
   }
