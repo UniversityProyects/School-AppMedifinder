@@ -33,6 +33,15 @@ class SideMenuState extends ConsumerState<SideMenu> {
       case '/satisfaccionPaciente':
         navDrawerIndex = 1;
         break;
+      case '/tipo-suscripcion':
+        navDrawerIndex = 2;
+        break;
+      case '/suscripcion-medico':
+        navDrawerIndex = 3;
+        break;
+      case '/usuarios':
+        navDrawerIndex = 4;
+        break;
       default:
         navDrawerIndex = -1; // Opción no seleccionada
         break;
@@ -65,6 +74,10 @@ class SideMenuState extends ConsumerState<SideMenu> {
               break;
             case 3:
               context.go('/suscripcion-medico');
+              break;
+            case 4:
+              context.go('/usuarios');
+              break;
             // Agrega más casos para otras rutas si es necesario
             default:
               break;
@@ -133,6 +146,10 @@ class SideMenuState extends ConsumerState<SideMenu> {
           const NavigationDrawerDestination(
             icon: Icon(Icons.local_hospital_outlined),
             label: Text('Suscripción Médico'),
+          ),
+          const NavigationDrawerDestination(
+            icon: Icon(Icons.person_outline), // Icono de usuario
+            label: Text('Usuario'), // Cambia el texto según lo que necesites
           ),
           const Padding(
             padding: EdgeInsets.fromLTRB(28, 16, 28, 10),

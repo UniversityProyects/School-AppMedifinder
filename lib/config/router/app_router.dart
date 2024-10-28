@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medifinder_crm/config/router/app_router_notifier.dart';
+import 'package:medifinder_crm/features/administrador/presentation/screens/administrador_screen.dart';
 import 'package:medifinder_crm/features/auth/auth.dart';
 import 'package:medifinder_crm/features/auth/presentation/providers/auth_provider.dart';
 import 'package:medifinder_crm/features/home/principal.dart';
@@ -68,6 +69,11 @@ final goRouterProvider = Provider((ref) {
             idSuscripcion:
                 state.pathParameters['idSuscripcion'] ?? 'no-id-suscripcion',
           ),
+        ),
+        //Rutas para usuarios
+        GoRoute(
+          path: '/usuarios',
+          builder: (context, state) => AdministradorScreen(),
         )
       ],
 
