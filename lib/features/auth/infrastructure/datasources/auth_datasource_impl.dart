@@ -48,7 +48,7 @@ class AuthDatasourceImpl extends AuthDatasource {
   @override
   Future<Usuario> login(String email, String contrasena) async {
     try {
-      final response = await dio.post('/Administradores/Login',
+      final response = await dio.post('/CMRMovil/Login',
           data: {'email': email, 'contrasena': contrasena});
 
       final user = UsuarioMapper.userJsonToEntity(response.data);
@@ -86,7 +86,7 @@ class AuthDatasourceImpl extends AuthDatasource {
   Future<String> registro(
       String email, String contrasena, String nombre, String apellido) async {
     try {
-      final response = await dio.post('/Administradores/Registrar', data: {
+      final response = await dio.post('/CMRMovil/Registrar', data: {
         'nombre': nombre,
         'apellido': apellido,
         'email': email,
