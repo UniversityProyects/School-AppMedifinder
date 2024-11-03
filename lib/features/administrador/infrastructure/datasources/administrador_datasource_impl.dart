@@ -44,4 +44,76 @@ class AdministradorDatasourceImpl extends AdministradorDatasource {
       throw Exception();
     }
   }
+
+  @override
+  Future<bool> activarAdministrador(String id) async {
+    try {
+      final respuesta = await dio.put("/CMRMovil/ActivarAdministrador/$id");
+      if (respuesta.data['codigoHttp'] == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } on DioException catch (e) {
+      if (e.error is SocketException) {
+        throw ErrorPersonalizado(
+            'Error de red: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
+      }
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw ErrorPersonalizado(
+            'Error de servidor: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
+      }
+      if (e.type == DioExceptionType.receiveTimeout) {
+        throw ErrorPersonalizado(
+            'Error de servidor: El servidor tardó demasiado en responder');
+      }
+      if (e.response!.statusCode == 500) {
+        throw ErrorPersonalizado(
+            e.response?.data['mensaje'] ?? 'Error inesperado del servidor');
+      }
+      if (e.response!.statusCode == 404) {
+        throw ErrorPersonalizado(e.response?.data['mensaje'] ??
+            'No se encontró el administrador ingresado');
+      }
+      throw Exception();
+    } catch (e) {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<bool> desactivarAdministrador(String id) async {
+    try {
+      final respuesta = await dio.put("/CMRMovil/DesactivarAdministrador/$id");
+      if (respuesta.data['codigoHttp'] == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } on DioException catch (e) {
+      if (e.error is SocketException) {
+        throw ErrorPersonalizado(
+            'Error de red: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
+      }
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw ErrorPersonalizado(
+            'Error de servidor: No se pudo establecer conexión con el servidor. Verifica tu conexión a internet.');
+      }
+      if (e.type == DioExceptionType.receiveTimeout) {
+        throw ErrorPersonalizado(
+            'Error de servidor: El servidor tardó demasiado en responder');
+      }
+      if (e.response!.statusCode == 500) {
+        throw ErrorPersonalizado(
+            e.response?.data['mensaje'] ?? 'Error inesperado del servidor');
+      }
+      if (e.response!.statusCode == 404) {
+        throw ErrorPersonalizado(e.response?.data['mensaje'] ??
+            'No se encontró el administrador ingresado');
+      }
+      throw Exception();
+    } catch (e) {
+      throw Exception();
+    }
+  }
 }
