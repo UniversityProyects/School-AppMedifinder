@@ -1,10 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medifinder_crm/config/router/app_router_notifier.dart';
+import 'package:medifinder_crm/features/administrador/presentation/screens/administrador_screen.dart';
 import 'package:medifinder_crm/features/auth/auth.dart';
 import 'package:medifinder_crm/features/auth/presentation/providers/auth_provider.dart';
 import 'package:medifinder_crm/features/home/principal.dart';
 import 'package:medifinder_crm/features/satisfaccionPaciente/satisfaccionPaciente.dart';
+import 'package:medifinder_crm/features/suscripcionMedico/presentation/screens/detalle_suscripcion_medico.dart';
+import 'package:medifinder_crm/features/suscripcionMedico/presentation/screens/sucripciones_medico_screen.dart';
+import 'package:medifinder_crm/features/suscripcionMedico/presentation/screens/suscripcion_medico_screen.dart';
+import 'package:medifinder_crm/features/tipoSuscripcion/tipo_suscripcion.dart';
 
 final goRouterProvider = Provider((ref) {
   final goRouteNotifier = ref.read(GoRouterNotifierProvider);
@@ -41,6 +46,34 @@ final goRouterProvider = Provider((ref) {
           builder: (context, state) => ComentariosMedicoScreen(
             idMedico: state.pathParameters['idMedico'] ?? 'no-id-medico',
           ),
+        ),
+        //Rutas de tipos de suscripciones
+        GoRoute(
+          path: '/tipo-suscripcion',
+          builder: (context, state) => TipoSuscripcionScreen(),
+        ),
+        //Rutas para suscripciones de medicos
+        GoRoute(
+          path: "/suscripcion-medico",
+          builder: (context, state) => SuscripcionMedicoScreen(),
+        ),
+        GoRoute(
+          path: '/suscripciones-medico/:idMedico',
+          builder: (context, state) => SucripcionesMedicoScreen(
+            idMedico: state.pathParameters['idMedico'] ?? 'no-id-medico',
+          ),
+        ),
+        GoRoute(
+          path: '/detalle-suscripcion-medico/:idSuscripcion',
+          builder: (context, state) => DetalleSuscripcionMedicoScreen(
+            idSuscripcion:
+                state.pathParameters['idSuscripcion'] ?? 'no-id-suscripcion',
+          ),
+        ),
+        //Rutas para usuarios
+        GoRoute(
+          path: '/usuarios',
+          builder: (context, state) => AdministradorScreen(),
         )
       ],
 
