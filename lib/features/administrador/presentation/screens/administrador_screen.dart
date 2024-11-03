@@ -20,15 +20,26 @@ class AdministradorScreen extends ConsumerWidget {
       body: administradorState.estaCargando
           ? const FullScreenLoader()
           : _AdministradorView(
-              listaAdministradores: administradorState.listaAdministradores),
+              listaAdministradores: administradorState.listaAdministradores,
+              ref: ref, // Pasamos ref aquí
+              scaffoldContext: context, // Pasamos el contexto aquí
+            ),
     );
   }
 }
 
 class _AdministradorView extends StatelessWidget {
   final List<Administrador> listaAdministradores;
+  final WidgetRef ref;
+  final BuildContext
+      scaffoldContext; // Contexto principal para mostrar el SnackBar
 
-  const _AdministradorView({super.key, required this.listaAdministradores});
+  const _AdministradorView({
+    super.key,
+    required this.listaAdministradores,
+    required this.ref,
+    required this.scaffoldContext,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -82,16 +93,16 @@ class _AdministradorView extends StatelessWidget {
                     style: const TextStyle(fontSize: 16)),
                 const SizedBox(height: 20),
                 Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.end, // Alineación a la derecha
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        if (administrador.estatus == "1") {
-                          _toggleEstatus(context, administrador.id, false);
-                        } else {
-                          _toggleEstatus(context, administrador.id, true);
-                        }
+                        _toggleEstatus(
+                          scaffoldContext, // Usamos el contexto principal aquí
+                          administrador.id,
+                          administrador.estatus != "1",
+                          ref,
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: administrador.estatus == "1"
@@ -105,8 +116,7 @@ class _AdministradorView extends StatelessWidget {
                       ),
                       child: Text(
                         administrador.estatus == "1" ? "Desactivar" : "Activar",
-                        style: const TextStyle(
-                            color: Colors.white), // Texto en blanco
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
                   ],
@@ -134,13 +144,14 @@ class _AdministradorView extends StatelessWidget {
     }
   }
 
-  void _toggleEstatus(BuildContext context, int id, bool activar) {
+  void _toggleEstatus(
+      BuildContext scaffoldContext, int id, bool activar, WidgetRef ref) {
     final mensaje = activar
         ? "¿Desea activar este administrador?"
         : "¿Desea desactivar este administrador?";
 
     showDialog(
-      context: context,
+      context: scaffoldContext,
       builder: (context) {
         return AlertDialog(
           title: const Text("Confirmar"),
@@ -148,14 +159,28 @@ class _AdministradorView extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo
+                Navigator.of(context).pop();
               },
               child: const Text("Cancelar"),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo
-                // Lógica para realizar la acción (activar/desactivar)
+              onPressed: () async {
+                Navigator.of(context).pop();
+                try {
+                  if (activar) {
+                    await ref
+                        .read(administradorProvider.notifier)
+                        .activarAdministrador(id.toString());
+                    _showSnackBar(scaffoldContext, "Administrador activado");
+                  } else {
+                    await ref
+                        .read(administradorProvider.notifier)
+                        .desactivarAdministrador(id.toString());
+                    _showSnackBar(scaffoldContext, "Administrador desactivado");
+                  }
+                } catch (e) {
+                  _showSnackBar(scaffoldContext, "Error: $e");
+                }
               },
               child: const Text("Aceptar"),
             ),
@@ -163,5 +188,11 @@ class _AdministradorView extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 }
