@@ -3,8 +3,8 @@ import 'package:medifinder_crm/features/administrador/domain/domain.dart';
 import 'package:medifinder_crm/features/administrador/presentation/providers/administrador_repository_provider.dart';
 
 //StateNotifierProvider
-final administradorProvider =
-    StateNotifierProvider<AdministradorNotifier, AdministradorState>((ref) {
+final administradorProvider = StateNotifierProvider.autoDispose<
+    AdministradorNotifier, AdministradorState>((ref) {
   final administradorRepository = ref.watch(AdministradorRepositoryProvider);
 
   return AdministradorNotifier(
@@ -26,13 +26,31 @@ class AdministradorNotifier extends StateNotifier<AdministradorState> {
     final responseAdministradores =
         await administradorRepository.obtenerAdministradores();
 
-    if (responseAdministradores.isEmpty) {
-      state = state.copyWith(estaCargando: false);
-      return;
+    // Asegúrate de que siempre haya un cambio en el estado
+    state = state.copyWith(estaCargando: false, listaAdministradores: []);
+    state = state.copyWith(listaAdministradores: responseAdministradores);
+  }
+
+  Future activarAdministrador(String id) async {
+    state = state.copyWith(estaCargando: true);
+
+    final respuesta = await administradorRepository.activarAdministrador(id);
+    if (respuesta) {
+      await obtenerAdministradores();
     }
 
-    state = state.copyWith(
-        estaCargando: false, listaAdministradores: responseAdministradores);
+    state = state.copyWith(estaCargando: false);
+  }
+
+  Future desactivarAdministrador(String id) async {
+    state = state.copyWith(estaCargando: true);
+
+    final respuesta = await administradorRepository.desactivarAdministrador(id);
+    if (respuesta) {
+      await obtenerAdministradores();
+    }
+
+    state = state.copyWith(estaCargando: false);
   }
 }
 
