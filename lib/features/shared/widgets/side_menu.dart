@@ -42,6 +42,9 @@ class SideMenuState extends ConsumerState<SideMenu> {
       case '/usuarios':
         navDrawerIndex = 4;
         break;
+      case '/solicitud-medico':
+        navDrawerIndex = 5;
+        break;
       default:
         navDrawerIndex = -1; // Opción no seleccionada
         break;
@@ -78,7 +81,9 @@ class SideMenuState extends ConsumerState<SideMenu> {
             case 4:
               context.go('/usuarios');
               break;
-            // Agrega más casos para otras rutas si es necesario
+            case 5:
+              context.go('/solicitud-medico');
+              break;
             default:
               break;
           }
@@ -148,8 +153,12 @@ class SideMenuState extends ConsumerState<SideMenu> {
             label: Text('Suscripción Médico'),
           ),
           const NavigationDrawerDestination(
-            icon: Icon(Icons.person_outline), // Icono de usuario
-            label: Text('Usuario'), // Cambia el texto según lo que necesites
+            icon: Icon(Icons.person_outline),
+            label: Text('Usuario'),
+          ),
+          const NavigationDrawerDestination(
+            icon: Icon(Icons.assignment),
+            label: Text('Solicitud Médico'),
           ),
           const Padding(
             padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
