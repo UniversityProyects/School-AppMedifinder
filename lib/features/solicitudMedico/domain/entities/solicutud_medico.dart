@@ -6,11 +6,11 @@ class SolicutudMedico {
   String telefono;
   String calle;
   String colonia;
-  String numero;
+  int numero;
   String ciudad;
   String pais;
   String codigoPostal;
-  String estatus;
+  int estatus;
   DateTime fechaRegistro;
   List<Especialidades> especialidades;
 
@@ -35,7 +35,7 @@ class SolicutudMedico {
 class Especialidades {
   int idEspecialidad;
   String numCedula;
-  int honorarios;
+  double honorarios;
   String especialidad;
 
   Especialidades({
