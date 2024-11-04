@@ -6,6 +6,7 @@ import 'package:medifinder_crm/features/auth/auth.dart';
 import 'package:medifinder_crm/features/auth/presentation/providers/auth_provider.dart';
 import 'package:medifinder_crm/features/home/principal.dart';
 import 'package:medifinder_crm/features/satisfaccionPaciente/satisfaccionPaciente.dart';
+import 'package:medifinder_crm/features/solicitudMedico/presentation/screens/solicitud_medico_screen.dart';
 import 'package:medifinder_crm/features/suscripcionMedico/presentation/screens/detalle_suscripcion_medico.dart';
 import 'package:medifinder_crm/features/suscripcionMedico/presentation/screens/sucripciones_medico_screen.dart';
 import 'package:medifinder_crm/features/suscripcionMedico/presentation/screens/suscripcion_medico_screen.dart';
@@ -74,7 +75,13 @@ final goRouterProvider = Provider((ref) {
         GoRoute(
           path: '/usuarios',
           builder: (context, state) => AdministradorScreen(),
-        )
+        ),
+        //Rutas para solicitudes
+        GoRoute(
+          path: "/solicitud-medico",
+          builder: (context, state) => SolicitudMedicoScreen(),
+        ),
+        //Aqui puedes agregar la ruta para el detalle
       ],
 
       ///! TODO: Bloquear si no se está autenticado de alguna manera
