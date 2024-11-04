@@ -6,5 +6,6 @@ class TipoSuscripcionMapper {
       nombre: json['nombre'],
       descripcion: json['descripcion'],
       precio: double.parse(json['precio'].toString()),
-      duracion: json['duracion']);
+      duracion: json['duracion'],
+      estatus: json['estatus']);
 }
