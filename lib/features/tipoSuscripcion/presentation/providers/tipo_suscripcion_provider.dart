@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medifinder_crm/features/tipoSuscripcion/domain/domain.dart';
+import 'package:medifinder_crm/features/tipoSuscripcion/infrastructure/mappers/tipoSuscripcionDTO.dart';
 import 'tipo_suscripcion_repository_provider.dart';
 
 //StateNotifierProvider
@@ -46,9 +47,38 @@ class TipoSuscripcionNotifier extends StateNotifier<TipoSuscripcionState> {
       tiposSuscripcion: responseTiposSuscripciones,
     );
   }
+
+  Future<String> activarTipoSuscripcion(int id) async {
+    final mensaje = await tipoSuscripcionRepository.activarTipoSuscripcion(id);
+    await obtenerTiposSuscripciones();
+    return mensaje;
+  }
+
+  Future<String> desactivarTipoSuscripcion(int id) async {
+    final mensaje =
+        await tipoSuscripcionRepository.desactivarTipoSuscripcion(id);
+    await obtenerTiposSuscripciones();
+    return mensaje;
+  }
+
+  Future<String> modificarTipoSuscripcion(
+      int id, TipoSuscripcionDTO tipoSuscripcionDTO) async {
+    final mensaje = await tipoSuscripcionRepository.modificarTipoSuscripcion(
+        id, tipoSuscripcionDTO);
+    await obtenerTiposSuscripciones();
+    return mensaje;
+  }
+
+  Future<String> registrarTipoSuscripcion(
+      TipoSuscripcionDTO tipoSuscripcionDTO) async {
+    final mensaje = await tipoSuscripcionRepository
+        .registrarTipoSuscripcion(tipoSuscripcionDTO);
+    await obtenerTiposSuscripciones();
+    return mensaje;
+  }
 }
 
-//State
+// State
 class TipoSuscripcionState {
   //Colocamos el tipo de variables que manejaran el estado de mi provider
   final bool estaCargando;
