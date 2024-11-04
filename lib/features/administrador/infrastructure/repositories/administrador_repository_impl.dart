@@ -9,4 +9,14 @@ class AdministradorRepositoryImpl extends AdministradorRepository {
   Future<List<Administrador>> obtenerAdministradores() {
     return datasource.obtenerAdministradores();
   }
+
+  @override
+  Future<bool> activarAdministrador(String id) {
+    return datasource.activarAdministrador(id);
+  }
+
+  @override
+  Future<bool> desactivarAdministrador(String id) {
+    return datasource.desactivarAdministrador(id);
+  }
 }
