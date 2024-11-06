@@ -182,7 +182,8 @@ class _ComentariosView extends StatelessWidget {
     final totalPuntos = comentariosMedico
         .map((comentario) => comentario.puntuacion)
         .reduce((a, b) => a + b);
-    return (totalPuntos / comentariosMedico.length).toDouble();
+    return double.parse(
+        (totalPuntos / comentariosMedico.length).toStringAsFixed(2));
   }
 }
 

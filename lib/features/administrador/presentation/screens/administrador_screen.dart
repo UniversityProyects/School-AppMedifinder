@@ -132,13 +132,9 @@ class _AdministradorView extends StatelessWidget {
   String _getEstatus(String estatus) {
     switch (estatus) {
       case "0":
-        return "Nuevo/Sin Validar";
-      case "1":
-        return "Activo/Validado";
-      case "2":
-        return "Activo/Pago Realizado";
-      case "3":
         return "Inactivo";
+      case "1":
+        return "Activo";
       default:
         return "Desconocido";
     }
