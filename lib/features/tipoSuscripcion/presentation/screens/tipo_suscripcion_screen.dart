@@ -125,8 +125,6 @@ class _TipoSuscripcionViewState extends ConsumerState<_TipoSuscripcionView> {
                 final precio = double.tryParse(precioController.text);
                 final duracion = int.tryParse(duracionController.text);
 
-                SnackBar(content: Text('Nombre ${nombre}'));
-
                 // Validar campos
                 if (nombre.isEmpty ||
                     descripcion.isEmpty ||
@@ -182,11 +180,13 @@ class _TipoSuscripcionViewState extends ConsumerState<_TipoSuscripcionView> {
 
     return Column(
       children: [
-        // Botón "Añadir"
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ElevatedButton(
+        // Botón "Añadir Suscripción"
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Align(
+            alignment: Alignment
+                .centerRight, // Cambia a Alignment.centerLeft o Alignment.centerRight si prefieres otra alineación
+            child: ElevatedButton(
               onPressed: _registrarTipoSuscripcion,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF006443),
@@ -194,9 +194,8 @@ class _TipoSuscripcionViewState extends ConsumerState<_TipoSuscripcionView> {
               ),
               child: const Text('Añadir Suscripción'),
             ),
-          ],
+          ),
         ),
-        const SizedBox(height: 10), // Espacio entre el botón y la lista
 
         // Lista de tarjetas de suscripciones
         Expanded(

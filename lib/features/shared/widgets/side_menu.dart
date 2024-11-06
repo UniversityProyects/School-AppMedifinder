@@ -114,8 +114,34 @@ class SideMenuState extends ConsumerState<SideMenu> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: const Text('Detalles de la cuenta'),
-                    content: const Text(
-                        'Aquí podrías mostrar más detalles del usuario.'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Nombre:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(estadoSesion.usuario?.nombreCompleto ??
+                            'No disponible'),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Email:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(estadoSesion.usuario?.email ?? 'No disponible'),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Estatus:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          estadoSesion.usuario?.estatus == "1"
+                              ? 'Activo'
+                              : 'Inactivo',
+                        ),
+                      ],
+                    ),
                     actions: <Widget>[
                       TextButton(
                         child: const Text('Cerrar'),

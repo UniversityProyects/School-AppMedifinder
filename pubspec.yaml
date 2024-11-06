@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   dio: ^5.7.0
+  fl_chart: ^0.69.0
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.1.0
@@ -23,9 +24,9 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
+  intl: ^0.18.0
   riverpod_generator: ^2.4.3
   riverpod_lint: ^2.3.13
-  intl: ^0.18.0
 
 flutter_launcher_icons:
   android: "launcher_icon"
