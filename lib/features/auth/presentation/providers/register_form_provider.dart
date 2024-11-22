@@ -171,6 +171,42 @@ class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
       return;
     }
 
+    if (state.nombre.value.isEmpty ||
+        state.nombre.value.trim() == "" ||
+        state.nombre.value.length < 3 ||
+        state.nombre.value.length > 30) {
+      state = state.copyWith(
+        esValido: false,
+      );
+      return;
+    }
+
+    if (state.apellido.value.isEmpty ||
+        state.apellido.value.trim() == "" ||
+        state.apellido.value.length < 3 ||
+        state.apellido.value.length > 30) {
+      state = state.copyWith(
+        esValido: false,
+      );
+      return;
+    }
+
+    if (!RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$')
+        .hasMatch(state.nombre.value.trim())) {
+      state = state.copyWith(
+        esValido: false,
+      );
+      return;
+    }
+
+    if (!RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$')
+        .hasMatch(state.apellido.value.trim())) {
+      state = state.copyWith(
+        esValido: false,
+      );
+      return;
+    }
+
     if (!state.esValido) return;
 
     state = state.copyWith(estaPosteado: true);
