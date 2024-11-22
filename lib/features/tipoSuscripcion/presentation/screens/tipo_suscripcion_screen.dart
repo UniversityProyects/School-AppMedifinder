@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medifinder_crm/features/shared/shared.dart';
 import 'package:medifinder_crm/features/tipoSuscripcion/presentation/widgets/widget.dart';
@@ -81,90 +82,135 @@ class _TipoSuscripcionViewState extends ConsumerState<_TipoSuscripcionView> {
     final precioController = TextEditingController();
     final duracionController = TextEditingController();
 
+    String? errorMessage; // Variable para almacenar el mensaje de error
+
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('Añadir Tipo de Suscripción'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextField(
-                  controller: nombreController,
-                  decoration: const InputDecoration(labelText: 'Nombre'),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Añadir'),
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (errorMessage != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: Text(
+                          errorMessage!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    TextField(
+                        controller: nombreController,
+                        decoration: const InputDecoration(labelText: 'Nombre'),
+                        maxLength: 20),
+                    TextField(
+                        controller: descripcionController,
+                        decoration:
+                            const InputDecoration(labelText: 'Descripción'),
+                        maxLength: 20),
+                    TextField(
+                      controller: precioController,
+                      decoration: const InputDecoration(labelText: 'Precio'),
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        DecimalInputFormatter(),
+                      ],
+                    ),
+                    TextField(
+                      controller: duracionController,
+                      decoration:
+                          const InputDecoration(labelText: 'Duración (meses)'),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(3),
+                      ],
+                    ),
+                  ],
                 ),
-                TextField(
-                  controller: descripcionController,
-                  decoration: const InputDecoration(labelText: 'Descripción'),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancelar'),
                 ),
-                TextField(
-                  controller: precioController,
-                  decoration: const InputDecoration(labelText: 'Precio'),
-                  keyboardType: TextInputType.number,
-                ),
-                TextField(
-                  controller: duracionController,
-                  decoration:
-                      const InputDecoration(labelText: 'Duración (meses)'),
-                  keyboardType: TextInputType.number,
+                ElevatedButton(
+                  onPressed: () async {
+                    final nombre = nombreController.text.trim();
+                    final descripcion = descripcionController.text.trim();
+                    final precio = double.tryParse(precioController.text);
+                    final duracion = int.tryParse(duracionController.text);
+
+                    // Validar campos
+                    if (nombre.isEmpty ||
+                        descripcion.isEmpty ||
+                        precio == null ||
+                        duracion == null) {
+                      setState(() {
+                        errorMessage = 'Todos los campos son obligatorios.';
+                      });
+                      return;
+                    }
+
+                    if (precio <= 0) {
+                      setState(() {
+                        errorMessage = 'El precio tiene que ser mayor a 0.';
+                      });
+                      return;
+                    }
+
+                    if (!RegExp(r'^\d{1,8}(\.\d{1,2})?$')
+                        .hasMatch(precio.toString())) {
+                      setState(() {
+                        errorMessage =
+                            'El precio debe ser un número válido con máximo 8 dígitos y 2 decimales.';
+                      });
+                      return;
+                    }
+
+                    if (duracion <= 0) {
+                      setState(() {
+                        errorMessage = 'La duración tiene que ser mayor a 0.';
+                      });
+                      return;
+                    }
+
+                    final nuevoTipoSuscripcion = TipoSuscripcionDTO(
+                      nombre: nombre,
+                      descripcion: descripcion,
+                      precio: precio,
+                      duracion: duracion,
+                    );
+
+                    try {
+                      final mensaje = await ref
+                          .read(tipoSuscripcionProvider.notifier)
+                          .registrarTipoSuscripcion(nuevoTipoSuscripcion);
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(mensaje)));
+                      ref
+                          .refresh(tipoSuscripcionProvider.notifier)
+                          .obtenerTiposSuscripciones();
+                      Navigator.of(context)
+                          .pop(); // Cerrar el diálogo después de registrar
+                    } catch (e) {
+                      setState(() {
+                        errorMessage = 'Error al registrar: $e';
+                      });
+                    }
+                  },
+                  child: const Text('Añadir'),
                 ),
               ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el diálogo
-              },
-              child: const Text('Cancelar'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final nombre = nombreController.text.trim();
-                final descripcion = descripcionController.text.trim();
-                final precio = double.tryParse(precioController.text);
-                final duracion = int.tryParse(duracionController.text);
-
-                // Validar campos
-                if (nombre.isEmpty ||
-                    descripcion.isEmpty ||
-                    precio == null ||
-                    precio <= 0 ||
-                    duracion == null ||
-                    duracion <= 0) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Todos los campos son obligatorios.')),
-                  );
-                  return;
-                }
-
-                final nuevoTipoSuscripcion = TipoSuscripcionDTO(
-                  nombre: nombre,
-                  descripcion: descripcion,
-                  precio: precio,
-                  duracion: duracion,
-                );
-
-                try {
-                  final mensaje = await ref
-                      .read(tipoSuscripcionProvider.notifier)
-                      .registrarTipoSuscripcion(nuevoTipoSuscripcion);
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(mensaje)));
-                  ref
-                      .refresh(tipoSuscripcionProvider.notifier)
-                      .obtenerTiposSuscripciones();
-                  Navigator.of(context)
-                      .pop(); // Cerrar el diálogo después de registrar
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error al registrar: $e')));
-                }
-              },
-              child: const Text('Añadir'),
-            ),
-          ],
+            );
+          },
         );
       },
     );
@@ -218,5 +264,19 @@ class _TipoSuscripcionViewState extends ConsumerState<_TipoSuscripcionView> {
         ),
       ],
     );
+  }
+}
+
+class DecimalInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final regex = RegExp(r'^\d{0,8}(\.\d{0,2})?$');
+
+    if (regex.hasMatch(newValue.text)) {
+      return newValue;
+    }
+
+    return oldValue;
   }
 }
